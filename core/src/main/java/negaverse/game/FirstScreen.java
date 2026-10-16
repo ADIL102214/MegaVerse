@@ -8,15 +8,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class FirstScreen implements Screen {
-    Texture stance;
-
+    HeatBlast heatBlast;
     SpriteBatch spriteBatch;
     FitViewport viewport;
 
     @Override
     public void show() {
-        stance = new Texture("Main Character/Heat Blast/stance.png");
-
+        heatBlast = new HeatBlast();
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(1024,336);
     }
@@ -35,7 +33,7 @@ public class FirstScreen implements Screen {
         viewport.apply();
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
-        spriteBatch.draw(stance, 50, 32, 48, 58);
+        heatBlast.draw(spriteBatch);
         spriteBatch.end();
     }
     @Override
