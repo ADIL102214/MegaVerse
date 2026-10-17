@@ -15,6 +15,7 @@ public class HeatBlast {
     float x = 50f;
     float speed = 150f;
     float runTime = 0;
+    boolean facingRight = true;
 
     HeatBlast() {
         stance = new Texture("Main Character/Heat Blast/stance.png");
@@ -25,10 +26,12 @@ public class HeatBlast {
     void run(float delta){
         running = false;
         if(Gdx.input.isKeyPressed(Input.Keys.D)){
+            facingRight = true;
             running = true;
             x += speed * delta;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.A)){
+            facingRight = false;
             running = true;
             x -= speed * delta;
         }
@@ -39,9 +42,13 @@ public class HeatBlast {
     void draw(SpriteBatch spriteBatch){
         if(running){
             TextureRegion frame = runAnimation.getKeyFrame(runTime, true);
-            spriteBatch.draw(frame, x, 32, 48, 58);
+            if(facingRight) spriteBatch.draw(frame, x, 32, 48, 58);
+            else spriteBatch.draw(frame, x+48, 32, -48, 58);
         }
-        else spriteBatch.draw(stance, x, 32, 48, 58);
+        else{
+            if(facingRight) spriteBatch.draw(stance, x, 32, 48, 58);
+            else spriteBatch.draw(stance, x+48, 32, -48, 58);
+        }
     }
 }
 
