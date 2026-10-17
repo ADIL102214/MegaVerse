@@ -21,6 +21,7 @@ public class FirstScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        heatBlast.run(delta);
         draw();
     }
 
