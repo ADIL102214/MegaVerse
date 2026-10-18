@@ -18,10 +18,21 @@ public class HeatBlast {
     boolean flamethrowing = false;
     float flamethrowingTime = 0;
     float x = 50f;
+    float y = 32f;
     float speed = 150f;
     float runTime = 0;
     float scale;
     boolean facingRight = true;
+    float u = 400f;
+    float g = -1200f;
+    float t;
+    float h;
+    float groundY = 32f;
+    float flyTime = 0;
+    float initialHeight;
+    boolean flying;
+    Texture flySheet;
+    Animation<TextureRegion>flyingAnimation;
 
     HeatBlast() {
         stance = new Texture("Main Character/Heat Blast/stance.png");
@@ -32,6 +43,9 @@ public class HeatBlast {
         flamethrowingSheet = new Texture("Main Character/Heat Blast/flamethrowing.png");
         TextureRegion[][] flamethrowingFrames = TextureRegion.split(flamethrowingSheet, flamethrowingSheet.getWidth()/5, flamethrowingSheet.getHeight());
         flamethrowingAnimation = new Animation<>(0.1f, flamethrowingFrames[0]);
+        flySheet = new Texture("Main Character/Heat Blast/fly.png");
+        TextureRegion[][] flyFrames = TextureRegion.split(flySheet, flySheet.getWidth()/12, flySheet.getHeight());
+        flyingAnimation = new Animation<>(0.1f, flyFrames[0]);
     }
     void run(float delta){
         running = false;
@@ -58,22 +72,47 @@ public class HeatBlast {
             flamethrowingTime += delta;
         }else flamethrowingTime = 0;
     }
+    void fly(float delta){
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+            initialHeight = y;
+            t = 0;
+            flying = true;
+        }
+        if(flying){
+            t += delta;
+            flyTime += delta;
+            h = u*t + 0.5f*g*t*t + initialHeight;
+            if(h <= groundY){
+                h = groundY;
+                flying = false;
+            }
+            y = h;
+        }else {
+            t = 0;
+            flyTime = 0;
+        }
+    }
     void draw(SpriteBatch spriteBatch){
-        if(running){
+        if(flying){
+            TextureRegion flyframe = flyingAnimation.getKeyFrame(flyTime, true);
+            float w = flyframe.getRegionWidth() * scale;
+            float h = flyframe.getRegionHeight() * scale;
+            if(facingRight) spriteBatch.draw(flyframe, x, y, w, h);
+            else spriteBatch.draw(flyframe, x+48, y, -w, h);
+        }else if(running){
             TextureRegion frame = runAnimation.getKeyFrame(runTime, true);
-            if(facingRight) spriteBatch.draw(frame, x, 32, 48, 58);
-            else spriteBatch.draw(frame, x+48, 32, -48, 58);
+            if(facingRight) spriteBatch.draw(frame, x, y, 48, 58);
+            else spriteBatch.draw(frame, x+48, y, -48, 58);
         }else if(flamethrowing){
             TextureRegion flamethrowingframe = flamethrowingAnimation.getKeyFrame(flamethrowingTime, true);
             float w = flamethrowingframe.getRegionWidth() * scale;
             float h = flamethrowingframe.getRegionHeight() * scale;
-            if(facingRight) spriteBatch.draw(flamethrowingframe, x, 32, w, h);
-            else spriteBatch.draw(flamethrowingframe, x+48, 32, -w, h);
+            if(facingRight) spriteBatch.draw(flamethrowingframe, x, y, w, h);
+            else spriteBatch.draw(flamethrowingframe, x+48, y, -w, h);
         }
         else{
-            if(facingRight) spriteBatch.draw(stance, x, 32, 48, 58);
-            else spriteBatch.draw(stance, x+48, 32, -48, 58);
+            if(facingRight) spriteBatch.draw(stance, x, y, 48, 58);
+            else spriteBatch.draw(stance, x+48, y, -48, 58);
         }
     }
 }
-

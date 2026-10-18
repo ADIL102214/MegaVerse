@@ -5,24 +5,26 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class FirstScreen implements Screen {
     HeatBlast heatBlast;
     SpriteBatch spriteBatch;
-    FitViewport viewport;
+    ExtendViewport viewport;
 
     @Override
     public void show() {
         heatBlast = new HeatBlast();
         spriteBatch = new SpriteBatch();
-        viewport = new FitViewport(1024,336);
+        viewport = new ExtendViewport(1024,336);
     }
 
     @Override
     public void render(float delta) {
         heatBlast.run(delta);
         heatBlast.flamethrow(delta);
+        heatBlast.fly(delta);
         draw();
     }
 
