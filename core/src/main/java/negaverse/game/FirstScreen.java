@@ -25,6 +25,7 @@ public class FirstScreen implements Screen {
         heatBlast.run(delta);
         heatBlast.flamethrow(delta);
         heatBlast.fly(delta);
+        heatBlast.punch(delta);
         draw();
     }
 

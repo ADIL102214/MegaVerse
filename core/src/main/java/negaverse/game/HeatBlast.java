@@ -33,6 +33,10 @@ public class HeatBlast {
     boolean flying;
     Texture flySheet;
     Animation<TextureRegion>flyingAnimation;
+    Texture punchSheet;
+    Animation<TextureRegion> punchAnimation;
+    boolean punching = false;
+    float punchTime = 0;
 
     HeatBlast() {
         stance = new Texture("Main Character/Heat Blast/stance.png");
@@ -46,6 +50,9 @@ public class HeatBlast {
         flySheet = new Texture("Main Character/Heat Blast/fly.png");
         TextureRegion[][] flyFrames = TextureRegion.split(flySheet, flySheet.getWidth()/12, flySheet.getHeight());
         flyingAnimation = new Animation<>(0.1f, flyFrames[0]);
+        punchSheet = new Texture("Main Character/Heat Blast/punch.png");
+        TextureRegion[][] punchFrames = TextureRegion.split(punchSheet, punchSheet.getWidth()/5, punchSheet.getHeight());
+        punchAnimation = new Animation<>(0.1f, punchFrames[0]);
     }
     void run(float delta){
         running = false;
@@ -92,6 +99,15 @@ public class HeatBlast {
             flyTime = 0;
         }
     }
+    void punch(float delta){
+        punching = false;
+        if(Gdx.input.isButtonPressed(Buttons.LEFT)){
+            punching = true;
+        }
+        if(punching){
+            punchTime += delta;
+        }else punchTime = 0;
+    }
     void draw(SpriteBatch spriteBatch){
         if(flying){
             TextureRegion flyframe = flyingAnimation.getKeyFrame(flyTime, true);
@@ -109,8 +125,13 @@ public class HeatBlast {
             float h = flamethrowingframe.getRegionHeight() * scale;
             if(facingRight) spriteBatch.draw(flamethrowingframe, x, y, w, h);
             else spriteBatch.draw(flamethrowingframe, x+48, y, -w, h);
-        }
-        else{
+        }else if (punching) {
+            TextureRegion punchframe = punchAnimation.getKeyFrame(punchTime, true);
+            float w = punchframe.getRegionWidth() * scale;
+            float h = punchframe.getRegionHeight() * scale;
+            if(facingRight) spriteBatch.draw(punchframe, x, y, w, h);
+            else spriteBatch.draw(punchframe, x+48, y, -w, h);
+        } else{
             if(facingRight) spriteBatch.draw(stance, x, y, 48, 58);
             else spriteBatch.draw(stance, x+48, y, -48, 58);
         }
