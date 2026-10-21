@@ -22,22 +22,19 @@ public class FirstScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        heatBlast.run(delta);
-        heatBlast.flamethrow(delta);
-        heatBlast.fly(delta);
-        heatBlast.punch(delta);
-        draw();
+        draw(delta);
     }
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
     }
-    void draw(){
+    void draw(float delta){
         ScreenUtils.clear(Color.WHITE);
         viewport.apply();
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
+        heatBlast.update(delta);
         heatBlast.draw(spriteBatch);
         spriteBatch.end();
     }
